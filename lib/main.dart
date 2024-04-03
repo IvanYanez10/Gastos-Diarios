@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gastos_diarios/views/edit_expense_view.dart';
 import './views/expense_list_view.dart';
 import './views/add_expense_view.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => ExpenseListView(),
+        '/': (context) => const ExpenseListView(),
         '/add_expense': (context) => const AddExpenseView(),
       },
     );

@@ -1,50 +1,24 @@
 import '../models/expense.dart';
-import '../repositories/expense_repository.dart';
+import '../utils/database_helper.dart';
 
 class ExpensePresenter {
-  final ExpenseRepository _repository;
-  final View _view;
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
 
-  ExpensePresenter(this._view, this._repository);
-
-  void fetchExpenses() async {
+  Future<List<Expense>> fetchAllExpenses() async {
     try {
-      final List<Expense> expenses = await _repository.fetchExpenses();
-      _view.displayExpenses(expenses);
+      final expenses = await _databaseHelper.getAllExpenses();
+      return expenses;
     } catch (e) {
-      _view.displayError('Error al cargar los gastos');
+      print('Error fetching expenses: $e');
+      return [];
     }
   }
 
-  void addExpense(Expense expense) async {
+  Future<void> updateExpenseStatus(int id, String status) async {
     try {
-      await _repository.addExpense(expense);
-      fetchExpenses(); // Actualizar la lista de gastos después de agregar uno nuevo
+      await DatabaseHelper.updateExpenseStatus(id, status);
     } catch (e) {
-      _view.displayError('Error al agregar el gasto');
+      print('Error updating expense status: $e');
     }
   }
-
-  void updateExpense(Expense expense) async {
-    try {
-      await _repository.updateExpense(expense);
-      fetchExpenses(); // Actualizar la lista de gastos después de editar uno
-    } catch (e) {
-      _view.displayError('Error al editar el gasto');
-    }
-  }
-
-  void deleteExpense(String id) async {
-    try {
-      await _repository.deleteExpense(id);
-      fetchExpenses(); // Actualizar la lista de gastos después de eliminar uno
-    } catch (e) {
-      _view.displayError('Error al eliminar el gasto');
-    }
-  }
-}
-
-abstract class View {
-  void displayExpenses(List<Expense> expenses);
-  void displayError(String message);
 }

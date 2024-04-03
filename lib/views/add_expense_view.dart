@@ -22,7 +22,7 @@ class _AddExpenseViewState extends State<AddExpenseView> {
     super.initState();
     _descriptionController = TextEditingController(text: widget.expense?.description ?? '');
     _amountController = TextEditingController(text: widget.expense?.amount.toString() ?? '');
-    _selectedDate = widget.expense?.date ?? DateTime.now();
+    _selectedDate = DateTime.now();
   }
 
   @override
@@ -44,7 +44,7 @@ class _AddExpenseViewState extends State<AddExpenseView> {
             TextField(
               controller: _amountController,
               decoration: const InputDecoration(labelText: 'Monto', prefixText: '\$'),
-              keyboardType: TextInputType.numberWithOptions(decimal: true), // Set keyboardType to allow decimal input
+              keyboardType: const TextInputType.numberWithOptions(decimal: true), // Set keyboardType to allow decimal input
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')), // Allow digits and optional decimal point
               ],
