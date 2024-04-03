@@ -41,7 +41,7 @@ Algunas funcionalidades que podrían agregarse en futuras versiones de la aplica
 ## Maquetación y Descarga de APK
 
 - **Maquetación de la Aplicación**: [Adjuntar Maquetación](https://www.figma.com/file/v6bVtRzXZUlenLbvxB0URa/Untitled?type=design&node-id=0%3A1&mode=design&t=iNNaJM9RmVlyoB6n-1)
-- **Descarga de APK**: [Descargar APK](link_apk)
+- **Descarga de APK**: [Descargar APK](https://drive.google.com/file/d/10CwTfN-w8SLAfqMlUpuWGMFFcpeNj6Xg/view?usp=sharing)
 
 ## Preparación para la Publicación
 

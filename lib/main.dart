@@ -3,6 +3,7 @@ import 'package:gastos_diarios/theme/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import './views/expense_list_view.dart';
 import './views/add_expense_view.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +20,13 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
     builder: (_ , child) {
         return MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('es', 'MX'), // Spanish (Mexico)
+          ],
           debugShowCheckedModeBanner: false,
           theme: appTheme,
           initialRoute: '/',
