@@ -40,7 +40,7 @@ class ExpenseItem extends StatelessWidget {
               fontWeight: FontWeight.bold
             ),),
             Text(
-              DateFormat('MMM dd, E').format(expense.date),
+              DateFormat('MMM dd, E','es').format(expense.date),
               style: const TextStyle(
                 fontWeight: FontWeight.w300,
                 color: Colors.black,
