@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/expense.dart';
 import '../utils/database_helper.dart';
+import '../widgets/date_picker.dart';
 
 class AddExpenseView extends StatefulWidget {
   final Expense? expense;
@@ -50,29 +51,22 @@ class _AddExpenseViewState extends State<AddExpenseView> {
               ],
             ),
             const SizedBox(height: 16.0),
-            TextButton(
-              onPressed: () async {
-                final DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: _selectedDate,
-                  firstDate: DateTime(2015, 8),
-                  lastDate: DateTime(2101),
-                );
-                if (pickedDate != null && pickedDate != _selectedDate) {
-                  setState(() {
-                    _selectedDate = pickedDate;
-                  });
-                }
+            DateSelectorButton(
+              selectedDate: _selectedDate,
+              onChanged: (newDate) {
+                setState(() {
+                  _selectedDate = newDate!;
+                });
               },
-              child: Text('Fecha: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () async {
+                String _selectedDateHandler = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day).toString();
                 final newExpense = {
                   'description': _descriptionController.text,
                   'amount': double.parse(_amountController.text),
-                  'date': _selectedDate.toString(),
+                  'date': _selectedDateHandler,
                   'status': 'created',
                 };
                 await DatabaseHelper.database.then((db) {

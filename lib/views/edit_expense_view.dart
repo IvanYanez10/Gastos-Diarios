@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/expense.dart';
 import '../utils/database_helper.dart';
+import '../widgets/date_picker.dart';
 
 class EditExpenseView extends StatefulWidget {
   final Expense expense;
@@ -30,6 +31,15 @@ class _EditExpenseViewState extends State<EditExpenseView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar Gasto'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () async {
+              await DatabaseHelper.deleteExpense(widget.expense.id);
+              Navigator.pop(context);
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -50,21 +60,21 @@ class _EditExpenseViewState extends State<EditExpenseView> {
               ],
             ),
             const SizedBox(height: 16.0),
-            TextButton(
-              onPressed: () async {
-                final DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: _selectedDate,
-                  firstDate: DateTime(2015, 8),
-                  lastDate: DateTime(2101),
-                );
-                if (pickedDate != null && pickedDate != _selectedDate) {
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey), // Border color
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16), // Padding
+              child: DateSelectorButton(
+                selectedDate: _selectedDate,
+                onChanged: (newDate) {
                   setState(() {
-                    _selectedDate = pickedDate;
+                    _selectedDate = newDate!;
                   });
-                }
-              },
-              child: Text('Fecha: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
+                },
+              )
+
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(

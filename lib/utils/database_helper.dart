@@ -73,25 +73,13 @@ class DatabaseHelper {
     );
   }
 
-  static Future<List<Expense>> getFilteredExpenses({
-    double? minAmount,
-    double? maxAmount,
-    DateTime? startDate,
-  }) async {
+  Future<List<Expense>> getFilteredExpenses(double maxAmount, String startDate) async {
     final db = await database;
-    late List<Map<String, dynamic>> expenseMaps;
-
-    if (minAmount != null || maxAmount != null) {
-      // Filter by amount
-      expenseMaps = await _filterByAmount(db, minAmount, maxAmount);
-    } else if (startDate != null) {
-      // Filter by date
-      expenseMaps = await _filterByDate(db, startDate);
-    } else {
-      // No filtering
-      expenseMaps = await db.query('expenses', where: 'status = ?', whereArgs: ['created']);
-    }
-
+    final List<Map<String, dynamic>> expenseMaps = await db.query(
+      'expenses',
+      where: 'amount <= ? AND date = ? AND status = ?',
+      whereArgs: [maxAmount, startDate, 'created'],
+    );
     return List.generate(expenseMaps.length, (i) {
       return Expense(
         id: expenseMaps[i]['id'],
@@ -103,42 +91,25 @@ class DatabaseHelper {
     });
   }
 
-  static Future<List<Map<String, dynamic>>> _filterByAmount(Database db, double? minAmount, double? maxAmount) async {
-    if (minAmount != null && maxAmount != null) {
-      // Filter by min and max amount
-      return await db.query(
-        'expenses',
-        where: 'amount >= ? AND amount <= ? AND status = ?',
-        whereArgs: [minAmount, maxAmount, 'created'],
-      );
-    } else if (minAmount != null) {
-      // Filter by min amount
-      return await db.query(
-        'expenses',
-        where: 'amount >= ? AND status = ?',
-        whereArgs: [minAmount, 'created'],
-      );
-    } else {
-      // Filter by max amount
-      return await db.query(
-        'expenses',
-        where: 'amount <= ? AND status = ?',
-        whereArgs: [maxAmount, 'created'],
-      );
-    }
+  static Future<void> deleteExpense(int id) async {
+    final db = await database;
+    await db.delete(
+      'expenses',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
-  static Future<List<Map<String, dynamic>>> _filterByDate(Database db, DateTime? startDate) async {
-    if (startDate != null) {
-      // Filter by start date
-      return await db.query(
-        'expenses',
-        where: 'date = ? AND status = ?',
-        whereArgs: [DateFormat('yyyy-MM-dd').format(startDate), 'created'],
-      );
-    } else {
-      // If no start date is provided, return all expenses
-      return await db.query('expenses', where: 'status = ?', whereArgs: ['created']);
-    }
+  Future<double?> getHighestAmount() async {
+    final db = await database;
+    final result = await db.rawQuery('SELECT MAX(amount) as highest_amount FROM expenses');
+    final highestAmount = result.isNotEmpty ? result.first['highest_amount'] as double : null;
+    return highestAmount;
   }
+
+  static Future<void> clearDatabase() async {
+    final db = await database;
+    await db.delete('expenses');
+  }
+
 }
